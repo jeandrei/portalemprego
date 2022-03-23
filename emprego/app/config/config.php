@@ -18,18 +18,18 @@ header('Content-Type: text/html; charset=utf-8');
 define('DB_HOST', 'mysql');
 define('DB_USER', 'root');
 define('DB_PASS', 'rootadm');
-define('DB_NAME', 'emprego');
+define('DB_NAME', 'portalemprego');
 
 // App Root
 define('APPROOT', dirname(dirname(__FILE__)));
 // valor que está nesta constante /var/www/html/mvc/app
 
 // URL ROOT
-define('URLROOT', 'http://' . $_SERVER["SERVER_NAME"] . '/sisurpe');
+define('URLROOT', 'http://' . $_SERVER["SERVER_NAME"] . '/emprego');
 //define('URLROOT', 'http://localhost/sisurpe');
 
 // Site Name
-define('SITENAME', 'SISURPE');
+define('SITENAME', 'VAGAS DE EMPREGO');
 
 //App Version
 define('APPVERSION', '1.0.0');

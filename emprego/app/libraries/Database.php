@@ -17,24 +17,75 @@
     private $dbh;
     private $stmt;
     private $error;
+    //tabela a ser manipulação pelo query builder que monta instrução sql
+    private $table; 
 
-    public function __construct() {
-        // Set DSN DATABASE SERVER NAME
-        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;       
-        $options = array(
-            // persistent connections increase performance checking the connection to the database
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        );
-    
-        // Ceate PDO instance
-        try{
-            $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
-        } catch(PDOException $e){
-            $this->error = $e->getMessage();
-            echo $this->error;
-        }
+    public function __construct($table = null) {       
+        $this->table = $table;
+        $this->setConnection();        
+       
     }
+
+    //Método responsável por criar uma conexão como banco de dados
+    private function setConnection(){         
+        // Set DSN DATABASE SERVER NAME
+         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;       
+         $options = array(
+             // persistent connections increase performance checking the connection to the database
+             PDO::ATTR_PERSISTENT => true,
+             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+         );
+     
+         // Ceate PDO instance
+         try{
+             $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
+             $this->dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+         } catch(PDOException $e){
+             $this->error = $e->getMessage();
+             echo $this->error;
+         }
+    }
+
+
+    //Método responsável por inserir dados no banco
+    //Retorna o id inserido
+    public function insert($values){        
+        //DADOS DA QUERY array_keys traz as chaves de um array
+        $fields = array_keys($values); 
+        //array_pad cria um array com x posições
+        //caso não tenha o número de posições desejadas o array_pad
+        //cria colocando o valor que queremos
+        //exemplo array_pad([], 3, '?'). iria criar um array de 
+        //3 posições todos com ? dentro
+        //logo na linha abaixo estamos criando um array com o número
+        //de posições constantes no array $field, logo se no array
+        //$field tiver 3 posições irá criar um arrai com ?,?,?
+        $binds = array_pad([], count($fields),'?');        
+        //MONTA A QUERY
+        //implode pega os valores do array $fields e separa com virgula
+        $query = 'INSERT INTO ' .$this->table. ' ('.implode(',',$fields).') VALUES ('.implode(',',$binds).')';
+        
+        //executa o insert
+        $this->execute($query,array_values($values));
+
+        //Retorna o id inserido
+        return $this->dbh->lastInsertId();
+    }
+
+
+     // Prepare statement with query
+     public function execute($query, $params = []) {        
+        try{
+            $this->stmt = $this->dbh->prepare($query);          
+            $this->stmt->execute($params);
+            return $this->stmt;
+        } catch(PDOException $e){
+             $this->error = $e->getMessage();             
+         }
+        
+    }
+
+
 
     // Prepare statement with query
     public function query($sql) {
@@ -63,7 +114,7 @@
     }
 
     //Execute the prepared statemant
-    public function execute(){
+    public function execute_antiga(){
         return $this->stmt->execute();
     }
 
