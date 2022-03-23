@@ -85,6 +85,15 @@
         
     }
 
+    //Método responsável por executar uma consulta no banco
+    public function select($where = null, $order = null, $limit = null){
+        //DADOS DA QUERY
+        $where = strlen($where) ? 'WHERE '.$where : '';
+        $where = strlen($order) ? 'ORDER BY '.$order : '';
+        $where = strlen($limit) ? 'LIMIT '.$limit : '';
+        $query = 'SELECT * FROM '.$this->table.' '.$where.' '.$order. ' '. $limit;
+    }
+
 
 
     // Prepare statement with query

@@ -10,7 +10,9 @@
 
         $data = [
             'title' => 'Vagas',           
-        ];  
+        ];
+        
+        $vagas = $this->vagasModel->getVagas();
 
         $this->view('vagas/index', $data);
     }

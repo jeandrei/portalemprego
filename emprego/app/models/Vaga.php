@@ -48,5 +48,11 @@
             //RETORNAR SUCESSO
             return true;   
         }
+
+        //Método responsável por obter as vagas do bd
+        //vai retornar um array
+        public static function getVagas($where = null, $order = null, $limit = null){
+            return $this->db->select($where,$order,$limit);
+        }
     }
 ?>
