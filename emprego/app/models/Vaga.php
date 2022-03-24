@@ -51,8 +51,24 @@
 
         //Método responsável por obter as vagas do bd
         //vai retornar um array
-        public static function getVagas($where = null, $order = null, $limit = null){
-            return $this->db->select($where,$order,$limit);
+        public function getVagas($where = null, $order = null, $limit = null){
+            return $this->db->select($where,$order,$limit)->fetchAll(PDO::FETCH_CLASS);
+            //return $this->db->select($where,$order,$limit);
+        }
+
+        //Método responsável por buscar uma vaga a partir de um ID
+        public function getVaga($id){
+            return $this->db->select('id= '.$id)->fetchObject();
+        }
+
+        //Método responsável por atualizar dados no banco
+        public function update($data){          
+            return $this->db->update('id= '.$data['id'],$data);
+        }
+
+        //Método responsável em deletar registros
+        public function delete($id){
+            return $this->db->delete('id = '.$id);
         }
     }
 ?>

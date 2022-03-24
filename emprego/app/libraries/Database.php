@@ -86,12 +86,45 @@
     }
 
     //Método responsável por executar uma consulta no banco
-    public function select($where = null, $order = null, $limit = null){
+    public function select($where = null, $order = null, $limit = null, $fields = '*'){
         //DADOS DA QUERY
         $where = strlen($where) ? 'WHERE '.$where : '';
-        $where = strlen($order) ? 'ORDER BY '.$order : '';
-        $where = strlen($limit) ? 'LIMIT '.$limit : '';
-        $query = 'SELECT * FROM '.$this->table.' '.$where.' '.$order. ' '. $limit;
+        $order = strlen($order) ? 'ORDER BY '.$order : '';
+        $limit = strlen($limit) ? 'LIMIT '.$limit : '';        
+        //MONTA A QUERY
+        $query = 'SELECT '. $fields.' FROM '.$this->table.' '.$where.' '.$order. ' '. $limit;        
+        //EXECUTA
+        if($this->execute($query)){
+            return $this->execute($query);
+        } else {
+            return false;
+        }
+    }
+
+    //Método responsável por atualizar dados no bd
+    public function update($where, $values){
+        //DADOS DA QUERY
+        $fields = array_keys($values);       
+        
+        //MONTA QUERY
+        $query = 'UPDATE '.$this->table.' SET '.implode('=?, ',$fields).'=? WHERE ' .$where;
+        
+        //EXECUTAR A QUERY
+        $this->execute($query,array_values($values));
+
+        return true;       
+    }
+
+    //Método responsável por excluir dados do banco
+    public function delete($where){
+        //MONTA A QUERY
+        $query = 'DELETE FROM '. $this->table.' WHERE '.$where;
+
+        //EXECUTA A QUERY
+        $this->execute($query);
+
+        //RETORNA SUCESSO
+        return true;
     }
 
 

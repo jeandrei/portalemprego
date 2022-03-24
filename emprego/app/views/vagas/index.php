@@ -1,4 +1,36 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
+<?php 
+    $resultados = '';
+    if(!empty($data['vagas'])){
+        foreach($data['vagas'] as $vaga){
+            $resultados .='<tr>
+                                <td>'.$vaga->id.'</td>
+                                <td>'.$vaga->titulo.'</td>
+                                <td>'.$vaga->descricao.'</td>
+                                <td>'.($vaga->ativo == 's' ? 'Ativo' : 'Inativo' ).'</td>
+                                <td>'.date('d/m/Y à\s H:i:s', strtotime($vaga->data)).'</td>
+                                <td>
+                                    <a href="'.URLROOT.'/vagas/edit/'.$vaga->id.'">
+                                    <buton type="button" class="btn btn-primary">Editar</button>
+                                    </a>
+                                    <a href="'.URLROOT.'/vagas/delete/'.$vaga->id.'">
+                                    <buton type="button" class="btn btn-danger">Excluir</button>
+                                    </a>
+                                </td>';
+        }     
+       
+    } else {
+        $resultados = '<tr>
+        <td colspan="6" class="text-center">
+            Nenhuma vaga encontrada
+        </td>';  
+    }   
+
+?>
+<div class="mt-3">
+    <?php flash('vagas');?>
+</div>
+
 <main>
     <section class="mt-3">
         <a href="<?php echo URLROOT ?>/vagas/new">
@@ -18,12 +50,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                </tr>                
+                <?php echo $resultados;?>           
             </tbody>
         </table>
     </section>
